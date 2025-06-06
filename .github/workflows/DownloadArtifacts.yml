@@ -4,12 +4,18 @@ on:
   push:
     branches: [ "main" ]
 
+  workflow_run:
+    workflows: ["Build"]
+    types:
+    - completed
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   job_1:
     name: Read artifact
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     
     steps:            
