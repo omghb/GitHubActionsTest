@@ -12,9 +12,9 @@ jobs:
     name: Read artifact
     runs-on: ubuntu-latest
     
-    permissions:
-      actions: read
-      contents: read
+    # permissions:
+    #   actions: read
+    #   contents: read
 
     steps:            
     - name: Checkout repository
