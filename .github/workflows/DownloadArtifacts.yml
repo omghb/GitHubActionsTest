@@ -16,7 +16,10 @@ jobs:
       actions: read
       contents: read
 
-    steps:        
+    steps:            
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Install GitHub CLI
       run: sudo apt-get install gh -y
 
