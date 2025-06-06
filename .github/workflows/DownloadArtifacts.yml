@@ -1,0 +1,39 @@
+name: Download artifacts
+
+on:
+  push:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  job_1:
+    name: Read artifact
+    runs-on: ubuntu-latest
+    steps:    
+    - name: Set up GitHub CLI
+      uses: cli/cli-action@v2
+
+    - name: Authenticate GitHub CLI
+      run: gh auth setup-git
+
+    - name: Get latest successful run ID
+      id: get_run
+      run: |
+        RUN_ID=$(gh run list \
+          --workflow="CreateArtifacts.yml" \
+          --branch=main \
+          --json databaseId,status,conclusion \
+          --jq '.[] | select(.conclusion=="success") | .databaseId' \
+          | head -n 1)
+        echo "run_id=$RUN_ID" >> $GITHUB_OUTPUT
+
+    - name: Download artifact from other workflow run
+      run: |
+        gh run download ${{ steps.get_run.outputs.run_id }} --name="artifact-name" --dir=./downloaded-artifacts
+
+    - shell: bash
+      run: |
+        pwd
+        cat ./downloaded-artifacts/math-homework.txt
