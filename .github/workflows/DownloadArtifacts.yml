@@ -27,7 +27,7 @@ jobs:
       id: get_run
       run: |
         RUN_ID=$(gh run list \
-          --workflow=".github/workflows/CreateArtifacts.yml" \
+          --workflow="CreateArtifacts.yml" \
           --branch=main \
           --json databaseId,status,conclusion \
           --jq '.[] | select(.conclusion=="success") | .databaseId' \
