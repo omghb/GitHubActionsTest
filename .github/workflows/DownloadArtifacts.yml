@@ -11,12 +11,17 @@ jobs:
   job_1:
     name: Read artifact
     runs-on: ubuntu-latest
-    steps:    
-    - name: Set up GitHub CLI
-      uses: cli/cli-action@v2
+    
+    permissions:
+      actions: read
+      contents: read
+
+    steps:        
+    - name: Install GitHub CLI
+      run: sudo apt-get install gh -y
 
     - name: Authenticate GitHub CLI
-      run: gh auth setup-git
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
     - name: Get latest successful run ID
       id: get_run
