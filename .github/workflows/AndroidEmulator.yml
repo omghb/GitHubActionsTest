@@ -27,7 +27,7 @@ jobs:
         echo "Creating AVD"
         echo "no" | avdmanager create avd -n test_emulator -k "system-images;android-35;google_apis;x86_64" --force
         echo "Starting emulator"
-        emulator -avd test_emulator -no-audio -no-boot-anim -no-window -no-snapshot &
+        emulator -avd test_emulator -no-audio -no-boot-anim -no-window -no-snapshot -skin 1080x1920 &
     
     - name: ⚙️ Wait for Android Emulator to complete booting
       run: |
