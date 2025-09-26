@@ -15,7 +15,7 @@ jobs:
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
-        
+
     - name: ⚙️ Start Android Emulator
       run: |
         export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
@@ -27,4 +27,22 @@ jobs:
         echo "Creating AVD"
         echo "no" | avdmanager create avd -n test_emulator -k "system-images;android-35;google_apis;x86_64" --force
         echo "Starting emulator"
-        emulator -avd test_emulator -no-audio -no-boot-anim -no-window -no-snapshot &     
+        emulator -avd test_emulator -no-audio -no-boot-anim -no-window -no-snapshot &
+    
+    - name: ⚙️ Wait for Android Emulator to complete booting
+      run: |
+        export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
+        adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 5; done; input keyevent 82'
+
+    - name: Create screenshot
+      run: |
+        adb exec-out screencap -p > screenshot.png
+    
+    - name: Upload screenshot
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: AndroidScreenshot
+        if-no-files-found: ignore
+        path: |
+          ./
