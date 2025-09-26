@@ -36,6 +36,7 @@ jobs:
 
     - name: Create screenshot
       run: |
+        export PATH="$ANDROID_SDK_ROOT/emulator:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
         adb exec-out screencap -p > screenshot.png
     
     - name: Upload screenshot
